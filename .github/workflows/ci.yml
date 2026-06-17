@@ -1,0 +1,113 @@
+name: CI — React CSR
+
+on:
+  push:
+    branches:
+      - solution
+  pull_request:
+    branches:
+      - solution
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # 1. Tests unitaires (Vitest)
+  test:
+    name: Tests unitaires (Vitest)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupération du code (checkout)
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Installation des dépendances
+        run: npm ci
+
+      - name: Linting (ESLint)
+        run: npm run lint
+
+      - name: Tests unitaires avec coverage
+        run: npm run test
+
+      - name: Upload du rapport de coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # 2. Build de production
+  build:
+    name: Build de production
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: npm run test:coverage
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Installation des dépendances
+        run: npm ci
+
+      - name: Build React (CSR)
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Upload des artefacts de build
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  # 3. Déploiement (GitHub Pages)
+  deploy:
+    name: Déploiement (GitHub Pages)
+    runs-on: ubuntu-latest
+    needs: build
+    # Ne se déclenche que sur la branche main
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Téléchargement des artefacts de build
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload vers GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
+      - name: Déploiement sur GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
