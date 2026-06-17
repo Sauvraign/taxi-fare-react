@@ -1,5 +1,20 @@
 # Calculateur tarifs taxis
 
+## Compétence abordées
+
+Algorithmique :
+- utilisation de structures de contrôle conditionnelles
+- utilisation d'opérateurs mathématiques
+
+Test unitaires :
+- développement TDD
+
+Développement ReactJS :
+- utilisation de "ref" pour récupération/manipulation d'éléments du DOM
+- manipualtion d'états
+
+## Objectifs
+
 Vous intervenez sur le développement d'une application dédiées aux chauffeurs de taxis.
 
 L'objectif est de livrer une application PHP qui permet aux utilisateurs de faire une estimation du tarif d'une course en fonction de critères qu'ils pourront saisir via un formulaire.
@@ -63,11 +78,3 @@ Implémenter la fonction:
 export function calculateFare(jourSemaine, hour, zone, distance, estFerie)
 ```
 du fichier `srcc/taxiFareCalculator.js` avec une approche [TDD](https://www.coursera.org/fr-FR/articles/test-driven-development).
-
-## Compétence abordées
-
-Algorithmique :
-- utilisation de structures de contrôle conditionnelles
-
-Développement ReactJS :
-- récupération d'informations d'un 
