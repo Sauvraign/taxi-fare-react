@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # 1. Tests unitaires (Vitest)
+  # 1. Tests unitaires
   test:
     name: Tests unitaires (Vitest)
     runs-on: ubuntu-latest
@@ -35,17 +35,8 @@ jobs:
       - name: Linting (ESLint)
         run: npm run lint
 
-      - name: Tests unitaires avec coverage
+      - name: Tests unitaires
         run: npm run test
-
-      # - name: Upload du rapport de coverage
-      #   uses: actions/upload-artifact@v7
-      #   if: always()
-      #   with:
-      #     name: coverage-report
-      #     path: coverage/
-      #     retention-days: 7
-
   # 2. Build de production
   build:
     name: Build de production
@@ -77,8 +68,7 @@ jobs:
           name: dist
           path: dist/
           retention-days: 7
-
-  # 3. Déploiement (GitHub Pages)
+  # 3. Déploiement
   deploy:
     name: Déploiement (GitHub Pages)
     runs-on: ubuntu-latest
