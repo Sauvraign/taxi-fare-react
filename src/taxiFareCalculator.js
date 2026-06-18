@@ -38,5 +38,7 @@ export const TARIF_C = 1.58;
  * @returns {number} Le prix total de la course en euros.
  */
 export function calculateFare(jourSemaine, hour, zone, distance, estFerie) {
-
+  if (jourSemaine) {
+    
+  }
 }
