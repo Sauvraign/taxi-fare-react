@@ -69,6 +69,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          VITE_BASE_URL: /taxi-fare-react/
 
       - name: Upload des artefacts de build
         uses: actions/upload-artifact@v7
